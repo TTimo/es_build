@@ -29,6 +29,6 @@ def upgrade_git( build_dir, prefix ):
 
 if ( __name__ == '__main__' ):
     upgrade_git( BUILD_DIR, PREFIX )
-#    install_cmake( BUILD_DIR, PREFIX )
+    install_cmake( BUILD_DIR, PREFIX )
 
 
