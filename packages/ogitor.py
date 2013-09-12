@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 
-import os, subprocess
+import package_helpers
 
-class PackageDetails( object ):
+class PackageDetails( package_helpers.PackageTemplate ):
+    name = 'Ogitor'
+    dirname = 'ogitor'
+
     def source( self, source_dir ):
-        pass
+        package_helpers.mercurial_clone( source_dir, self.dirname, [ 'https://bitbucket.org/jacmoe/ogitor' ] )
+

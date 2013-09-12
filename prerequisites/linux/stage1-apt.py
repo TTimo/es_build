@@ -3,18 +3,29 @@
 import subprocess
 
 packages = [
-    'python-pip',
-    'mercurial',
-    'libx11-dev',
-    'libxt-dev',
-    'libfreetype6-dev',
-    'mesa-common-dev',
-    'pkg-config',
+    'gettext',
+    'libboost1.40-all-dev',
     'libcurl4-gnutls-dev',
     'libexpat1-dev',
-    'gettext',
-    'libz-dev',
+    'libfreeimage-dev',
+    'libfreetype6-dev',
+    'libgl1-mesa-dev',
+    'libglu1-mesa-dev',
+    'libgtk2.0-dev',
+    'libqt4-dev',
     'libssl-dev',
+    'libwxgtk2.8-dev',
+    'libx11-dev',
+    'libxaw7-dev',
+    'libxt-dev',
+    'libz-dev',
+    'libzzip-dev',
+    'mercurial',
+    'mesa-common-dev',
+    'mesa-utils',
+    'pkg-config',
+    'python-pip',
+    'wx-common',
     ]
 
 if ( __name__ == '__main__' ):
