@@ -20,4 +20,5 @@ class PackageDetails( package_helpers.PackageTemplate ):
         sh.cd( package_build_dir )
         sh.cmake( '-D', 'CMAKE_INSTALL_PREFIX=%s' % install_dir, package_source_dir, _out = sys.stdout )
         sh.make( '-j4', 'VERBOSE=1', _out = sys.stdout )
+        sh.make.install( _out = sys.stdout )
 

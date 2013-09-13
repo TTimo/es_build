@@ -1,0 +1,130 @@
+diff -r a896f483007f Dependencies/GenericImageEditor/src/genericimageeditorcodec.cpp
+--- a/Dependencies/GenericImageEditor/src/genericimageeditorcodec.cpp	Tue Sep 10 22:11:49 2013 +0200
++++ b/Dependencies/GenericImageEditor/src/genericimageeditorcodec.cpp	Fri Sep 13 10:25:27 2013 -0500
+@@ -46,11 +46,16 @@
+ 
+     ImageConverter imageConverter(image.getWidth(), image.getHeight());
+ 
++    // TTimo - Qt 4.6
++    mPixmap = QPixmap::fromImage( imageConverter.fromOgreImage( image ) );
++    return mPixmap;
++    /*
+     if (mPixmap.convertFromImage(imageConverter.fromOgreImage(image)))
+         return mPixmap;
+ 
+     mPixmap = 0;
+     return mPixmap;
++    */
+ }
+ //-----------------------------------------------------------------------------------------
+ QString GenericImageEditorCodec::onToolTip(QMouseEvent* event)
+diff -r a896f483007f Dependencies/OFS/include/ofs13.h
+--- a/Dependencies/OFS/include/ofs13.h	Tue Sep 10 22:11:49 2013 +0200
++++ b/Dependencies/OFS/include/ofs13.h	Fri Sep 13 10:25:27 2013 -0500
+@@ -32,6 +32,9 @@
+ 
+ #pragma once
+ 
++// TTimo - memset etc.
++#include <string.h>
++
+ #include <vector>
+ #include <map>
+ #include <fstream>
+diff -r a896f483007f Dependencies/OFS/include/ofs_base.h
+--- a/Dependencies/OFS/include/ofs_base.h	Tue Sep 10 22:11:49 2013 +0200
++++ b/Dependencies/OFS/include/ofs_base.h	Fri Sep 13 10:25:27 2013 -0500
+@@ -32,6 +32,9 @@
+ 
+ #pragma once
+ 
++// TTimo - memset, memcpy etc.
++#include <string.h>
++
+ #include <vector>
+ #include <map>
+ #include <fstream>
+diff -r a896f483007f Dependencies/OFS/source/file_ops.cpp
+--- a/Dependencies/OFS/source/file_ops.cpp	Tue Sep 10 22:11:49 2013 +0200
++++ b/Dependencies/OFS/source/file_ops.cpp	Fri Sep 13 10:25:27 2013 -0500
+@@ -78,7 +78,9 @@
+           newdesc->ParentId = desc->Id;
+           newdesc->Parent = desc;
+           newdesc->Flags = OFS::OFS_FILE;
+-          newdesc->Name = boost::filesystem::path(name).filename().string();
++	  // TTimo - boost 1.40
++          newdesc->Name = boost::filesystem::path(name).filename();
++	  //          newdesc->Name = boost::filesystem::path(name).filename().string();
+           newdesc->FileSize = boost::filesystem::file_size(name);
+           newdesc->OldParentId = desc->Id;
+           newdesc->UseCount = 0;
+@@ -98,7 +100,9 @@
+           newdesc->ParentId = desc->Id;
+           newdesc->Parent = desc;
+           newdesc->Flags = OFS::OFS_DIR;
+-          newdesc->Name = boost::filesystem::path(name).filename().string();
++	  // TTimo - boost 1.40
++	  newdesc->Name = boost::filesystem::path(name).filename();
++          //newdesc->Name = boost::filesystem::path(name).filename().string();
+           newdesc->FileSize = 0;
+           newdesc->OldParentId = desc->Id;
+           newdesc->UseCount = 0;
+diff -r a896f483007f Ogitor/src/TerrainPageEditor.cpp
+--- a/Ogitor/src/TerrainPageEditor.cpp	Tue Sep 10 22:11:49 2013 +0200
++++ b/Ogitor/src/TerrainPageEditor.cpp	Fri Sep 13 10:25:27 2013 -0500
+@@ -130,7 +130,9 @@
+     mOgitorsRoot->GetProjectFile()->createFile(*fileHandle, filename.c_str());
+ 
+     // Force to load highest LoD, or quadTree may contain hole
+-    mHandle->load(0, true);
++    // TTimo - Ogre 1.8
++    mHandle->load();
++    //    mHandle->load(0, true);
+ 
+     Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW OfsDataStream(mOgitorsRoot->GetProjectFile(), fileHandle));
+     //Ogre::DataStreamPtr compressStream(OGRE_NEW Ogre::DeflateStream(filename, stream, tmpCompressFile));
+diff -r a896f483007f qtOgitor/src/qtogitorsystem.cpp
+--- a/qtOgitor/src/qtogitorsystem.cpp	Tue Sep 10 22:11:49 2013 +0200
++++ b/qtOgitor/src/qtogitorsystem.cpp	Fri Sep 13 10:25:27 2013 -0500
+@@ -714,8 +714,12 @@
+             Ogre::String name = Ogre::any_cast<Ogre::String>(opt.mValue);
+             
+             QPixmap pixmap;
++	    // TTimo - Qt 4.6
++	    pixmap = QPixmap::fromImage( imageConverter.fromOgreImageName( name, "TerrainGroupDiffuseSpecular" ) );
++	    /*
+             if (!pixmap.convertFromImage(imageConverter.fromOgreImageName(name, "TerrainGroupDiffuseSpecular")))
+                 continue;
++	    */
+ 
+             QIcon witem(pixmap);
+             QString texname(name.c_str());
+diff -r a896f483007f qtOgitor/src/terraintoolswidget.cpp
+--- a/qtOgitor/src/terraintoolswidget.cpp	Tue Sep 10 22:11:49 2013 +0200
++++ b/qtOgitor/src/terraintoolswidget.cpp	Fri Sep 13 10:25:27 2013 -0500
+@@ -271,8 +271,12 @@
+         Ogre::String name = Ogre::any_cast<Ogre::String>(opt.mValue);
+         
+         QPixmap pixmap;
++	// TTimo - Qt 4.6
++	pixmap = QPixmap::fromImage( imageConverter.fromOgreImageName( name, "TerrainGroupDiffuseSpecular" ) );
++	/*
+         if (!pixmap.convertFromImage(imageConverter.fromOgreImageName(name, "TerrainGroupDiffuseSpecular")))
+             continue;
++	*/
+ 
+         QListWidgetItem *witem = new QListWidgetItem(QIcon(pixmap), name.c_str());
+         witem->setWhatsThis(name.c_str());
+@@ -302,8 +306,12 @@
+         Ogre::String name = resPtr->getName();
+ 
+         QPixmap pixmap;
++	// TTimo - Qt 4.6
++	pixmap = QPixmap::fromImage( imageConverter.fromOgreMaterialName( name, "TerrainGroupPlants" ) );
++	/*
+         if (!pixmap.convertFromImage(imageConverter.fromOgreMaterialName(name, "TerrainGroupPlants")))
+             continue;
++	*/
+         
+         QListWidgetItem *witem = new QListWidgetItem(QIcon(pixmap), name.c_str());
+         witem->setWhatsThis(name.c_str());
