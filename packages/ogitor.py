@@ -19,11 +19,11 @@ class PackageDetails( package_helpers.PackageTemplate ):
         runpath_dir = os.path.join( package_source_dir, 'RunPath' )
         if ( not os.path.exists( os.path.join( runpath_dir, 'media.zip' ) ) ):
             sh.cd( runpath_dir )
-            sh.wget( 'https://bitbucket.org/jacmoe/ogitor/downloads/media.zip' )
+            sh.wget( '--no-check-certificate', 'https://bitbucket.org/jacmoe/ogitor/downloads/media.zip' )
             sh.unzip( 'media.zip' )
         if ( not os.path.exists( os.path.join( runpath_dir, 'projects.zip' ) ) ):
             sh.cd( runpath_dir )
-            sh.wget( 'https://bitbucket.org/jacmoe/ogitor/downloads/projects.zip' )
+            sh.wget( '--no-check-certificate', 'https://bitbucket.org/jacmoe/ogitor/downloads/projects.zip' )
             sh.unzip( 'projects.zip' )
         sh.mkdir( '-p', package_build_dir )
         sh.cd( package_build_dir )
