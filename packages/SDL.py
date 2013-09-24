@@ -10,3 +10,4 @@ class PackageDetails( package_helpers.PackageTemplate ):
     
     def source( self, source_dir ):
         package_helpers.mercurial_clone( source_dir, self.dirname, [ 'http://hg.libsdl.org/SDL' ] )
+        # FIXME: apply patch

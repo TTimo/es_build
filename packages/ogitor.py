@@ -10,6 +10,7 @@ class PackageDetails( package_helpers.PackageTemplate ):
 
     def source( self, source_dir ):
         package_helpers.mercurial_clone( source_dir, self.dirname, [ 'https://bitbucket.org/jacmoe/ogitor' ] )
+        # FIXME: apply patch
 
     def compile( self, source_dir, build_dir, install_dir ):
         package_source_dir = os.path.join( source_dir, self.dirname )
