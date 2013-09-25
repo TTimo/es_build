@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os
+import sys, os, platform
 
 import package_helpers
 
@@ -19,6 +19,9 @@ class PackageDetails( package_helpers.PackageTemplate ):
         sh.mkdir( '-p', package_build_dir )
         sh.cd( package_build_dir )
         sh.cmake( '-D', 'CMAKE_INSTALL_PREFIX=%s' % install_dir, package_source_dir, _out = sys.stdout )
-        sh.make( '-j4', 'VERBOSE=1', _out = sys.stdout )
-        sh.make.install( _out = sys.stdout )
+        if ( platform.system() == 'Darwin' ):
+            sh.xcodebuild( '-scheme', 'install', '-configuration', 'Release',_out = sys.stdout )
+        else:
+            sh.make( '-j4', 'VERBOSE=1', _out = sys.stdout )
+            sh.make.install( _out = sys.stdout )
 
