@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, platform
+import sys, os, platform, sh
 
 import package_helpers
 
@@ -12,7 +12,6 @@ class PackageDetails( package_helpers.PackageTemplate ):
         package_helpers.mercurial_clone( source_dir, self.dirname, [ 'https://bitbucket.org/sinbad/ogre/', '-r', 'v1-8' ] )
 
     def compile( self, source_dir, build_dir, install_dir ):
-        import sh
         package_source_dir = os.path.join( source_dir, self.dirname )
         assert( os.path.exists( package_source_dir ) )
         package_build_dir = os.path.join( build_dir, self.dirname )
