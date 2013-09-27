@@ -16,8 +16,10 @@ class PackageDetails( package_helpers.PackageTemplate ):
         assert( os.path.exists( package_source_dir ) )
         package_build_dir = os.path.join( build_dir, self.dirname )
         sh.mkdir( '-p', package_build_dir )
-        sh.cd( package_build_dir )
+	sh.cd( package_source_dir )
+	subprocess.check_call( [ os.path.join( package_source_dir, 'autogen.sh' ) ], shell = True ), 
         # NOTE: there are problems with cmake support on this still
+	sh.cd( package_build_dir )
         subprocess.check_call( [ os.path.join( package_source_dir, 'configure' ), '--prefix=%s' % install_dir ], shell = True )
         sh.make( '-j4', _out = sys.stdout )
         sh.make.install( _out = sys.stdout )
