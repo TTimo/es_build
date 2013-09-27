@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-import sys, os, sh
+import sys, os, platform, sh
 
 import package_helpers
 
 class PackageDetails( package_helpers.PackageTemplate ):
-    name = 'Ogre Meshy'
+    name = 'Meshy'
     dirname = 'ogremeshy'
 
     def source( self, source_dir ):
@@ -26,11 +26,20 @@ class PackageDetails( package_helpers.PackageTemplate ):
 
         sh.mkdir( '-p', package_build_dir )
         sh.cd( package_build_dir )
-        sh.cmake(
-            '-D', 'CMAKE_INSTALL_PREFIX=%s' % install_dir,
-            '-D', 'CMAKE_MODULE_PATH=%s' % os.path.join( install_dir, 'lib/OGRE/cmake' ),
-            package_source_dir,
-            _out = sys.stdout )
-        sh.make( '-j4', 'VERBOSE=1', _out = sys.stdout )
-        sh.make.install( _out = sys.stdout )
-        # FIXME: copy system libs: libboost*, libfreeimage*, libzzip*
+        if ( platform.system() == 'Darwin' ):
+            sh.cmake(
+                '-G', 'Xcode',
+                '-D', 'CMAKE_INSTALL_PREFIX=%s' % install_dir,
+                '-D', 'CMAKE_MODULE_PATH=%s' % os.path.join( install_dir, 'CMake' ),
+                package_source_dir,
+                _out = sys.stdout )
+            sh.xcodebuild( '-configuration', 'Release', _out = sys.stdout )
+        else:
+            sh.cmake(
+                '-D', 'CMAKE_INSTALL_PREFIX=%s' % install_dir,
+                '-D', 'CMAKE_MODULE_PATH=%s' % os.path.join( install_dir, 'lib/OGRE/cmake' ),
+                package_source_dir,
+                _out = sys.stdout )
+            sh.make( '-j4', 'VERBOSE=1', _out = sys.stdout )
+            sh.make.install( _out = sys.stdout )
+            # FIXME: copy system libs: libboost*, libfreeimage*, libzzip*
