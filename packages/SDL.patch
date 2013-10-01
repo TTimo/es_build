@@ -1,0 +1,44 @@
+diff -r 66b5b8446275 CMakeLists.txt
+--- a/CMakeLists.txt	Wed Aug 28 22:09:17 2013 -0400
++++ b/CMakeLists.txt	Tue Sep 24 16:36:51 2013 -0500
+@@ -980,7 +980,7 @@
+       set(SDL_VIDEO_RENDER_OGL 1)
+       if(DARWIN)
+         find_library(OpenGL_LIBRARY OpenGL)
+-        list(APPEND EXTRA_LIBRARIES ${OpenGL_LIBRARY})
++        list(APPEND EXTRA_LIBS ${OpenGL_LIBRARY})
+       endif(DARWIN)
+       set(HAVE_VIDEO_OPENGL TRUE)
+     endif(VIDEO_OPENGL)
+diff -r 66b5b8446275 cmake/macros.cmake
+--- a/cmake/macros.cmake	Wed Aug 28 22:09:17 2013 -0400
++++ b/cmake/macros.cmake	Tue Sep 24 16:36:51 2013 -0500
+@@ -67,6 +67,9 @@
+ macro(CHECK_OBJC_SOURCE_COMPILES SOURCE VAR)
+   set(PREV_REQUIRED_DEFS "${CMAKE_REQUIRED_DEFINITIONS}")
+   set(CMAKE_REQUIRED_DEFINITIONS "-ObjC ${PREV_REQUIRED_DEFS}")
++# https://bugzilla.libsdl.org/show_bug.cgi?id=2056
++# fix does not work though
++#  set(CMAKE_REQUIRED_LIBRARIES "objc")
+   CHECK_C_SOURCE_COMPILES(${SOURCE} ${VAR})
+   set(CMAKE_REQUIRED_DEFINITIONS "${PREV_REQUIRED_DEFS}")
+ endmacro()
+diff -r 66b5b8446275 cmake/sdlchecks.cmake
+--- a/cmake/sdlchecks.cmake	Wed Aug 28 22:09:17 2013 -0400
++++ b/cmake/sdlchecks.cmake	Tue Sep 24 16:36:51 2013 -0500
+@@ -493,9 +493,12 @@
+ #
+ macro(CheckCOCOA)
+   if(VIDEO_COCOA)
+-    check_objc_source_compiles("
+-        #import <Cocoa/Cocoa.h>
+-        int main (int argc, char** argv) {}" HAVE_VIDEO_COCOA)
++    if(APPLE)
++      set(HAVE_VIDEO_COCOA 1)
++    endif()
++#    check_objc_source_compiles("
++#        #import <Cocoa/Cocoa.h>
++#        int main (int argc, char** argv) {}" HAVE_VIDEO_COCOA)
+     if(HAVE_VIDEO_COCOA)
+       file(GLOB COCOA_SOURCES ${SDL2_SOURCE_DIR}/src/video/cocoa/*.m)
+       set_source_files_properties(${COCOA_SOURCES} PROPERTIES LANGUAGE C)

@@ -8,7 +8,16 @@ def mercurial_clone( top_dir, clone_dir, clone_args ):
         os.chdir( clone_dir )
         subprocess.check_call( [ 'hg', 'update' ] )
     else:
-        subprocess.check_call( [ 'hg', 'clone', ] + clone_args )
+        subprocess.check_call( [ 'hg', 'clone' ] + clone_args )
+        assert( os.path.exists( clone_dir ) )
+
+def git_clone( top_dir, clone_dir, clone_args ):
+    os.chdir( top_dir )
+    if ( os.path.exists( clone_dir ) ):
+        os.chdir( clone_dir )
+        subprocess.check_call( [ 'git', 'pull' ] )
+    else:
+        subprocess.check_call( [ 'git', 'clone' ] + clone_args )
         assert( os.path.exists( clone_dir ) )
 
 class PackageTemplate( object ):

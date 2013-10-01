@@ -3,7 +3,8 @@
 import os, pprint, traceback
 
 def iterate_packages( directory ):
-    for package_name in os.listdir( directory ):
+    # sorted and the 10_* 20_* naming scheme allows to control order
+    for package_name in sorted( os.listdir( directory ) ):
         if ( not package_name.endswith( '.py' ) ):
             continue
         if ( package_name in [ '__init__.py', 'package_helpers.py' ] ):
