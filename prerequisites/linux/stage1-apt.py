@@ -39,6 +39,7 @@ if ( es_config.FLAVOR == 'ubuntu_10' ):
     packages.append( 'libboost1.40-all-dev' )
 else:
     packages.append( 'libboost-all-dev' )
+    packages.append( 'cmake' )
 
 if ( __name__ == '__main__' ):
     subprocess.check_call( 'apt-get update', shell = True )
