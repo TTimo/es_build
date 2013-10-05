@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, pprint
+import os, pprint, imp
 
 # defaults
 PACKAGES_DIR='packages'
@@ -15,16 +15,18 @@ INSTALL_DIR = os.path.join( _TOP_DIR, 'run' )
 FLAVOR = "default"
 
 # put customized site configuration in a config file that does not get checked in
-ES_CONFIG_SITE_FILENAME='es_config_site.py'
-if ( os.path.exists( ES_CONFIG_SITE_FILENAME ) ):
-#    print( 'Found site configuration:' )
-    es_config_site = __import__( ES_CONFIG_SITE_FILENAME[:-3], globals(), locals() )
-    # merge into globals() .. there is probably a better way to do this?
-    for ( k, v ) in es_config_site.__dict__.items():
+es_site_config_path = os.path.abspath( os.path.join( os.path.dirname( __file__ ), 'es_site_config.py' ) )
+if ( os.path.exists( es_site_config_path ) ):
+#    print( 'Loading site configuration %s' % repr( es_site_config_path ) )
+    es_site_config = imp.load_source(
+        'es_site_config',
+        es_site_config_path )
+    # merge into globals() ..
+    for ( k, v ) in es_site_config.__dict__.items():
         if ( not k[0].isupper() ):
             continue
 #        print( '  %s=%s' % ( str( k ), str( v ) ) )
-        globals()[k] = v
+        globals()[k] = v        
 
 if ( __name__ == '__main__' ):
     # if executed directly, print the configuration as we see it
