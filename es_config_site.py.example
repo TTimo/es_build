@@ -1,0 +1,4 @@
+#!/usr/bin/env python
+# override the default configuration settings with a site configuration
+
+FLAVOR = "ubuntu_10"
