@@ -4,3 +4,5 @@ We proceed in three stages:
 - Install packages with apt
 - Install/update python packages with pip
 - Install extra packages from source
+
+NOTE: These scripts need to be executed as root

@@ -1,10 +1,17 @@
 #!/usr/bin/env python
 
-import subprocess
+import sys, os, subprocess
+
+try:
+    import es_config
+except:
+    import imp
+    es_config = imp.load_source(
+        'es_config',
+        os.path.abspath( os.path.join( os.path.dirname( __file__ ), '..', '..', 'es_config.py' ) ) )
 
 packages = [
     'gettext',
-    'libboost1.40-all-dev',
     'libcurl4-gnutls-dev',
     'libexpat1-dev',
     'libfreeimage-dev',
@@ -28,8 +35,14 @@ packages = [
     'wx-common',
     ]
 
+if ( es_config.FLAVOR == 'ubuntu_10' ):
+    packages.append( 'libboost1.40-all-dev' )
+else:
+    packages.append( 'libboost-all-dev' )
+
 if ( __name__ == '__main__' ):
     subprocess.check_call( 'apt-get update', shell = True )
-    install_cmd = 'apt-get install -q -y %s' % ' '.join( packages )
-    print( install_cmd )
-    subprocess.check_call( install_cmd, shell = True )
+    for package in packages:
+        install_cmd = 'apt-get install -q -y %s' % package
+        print( install_cmd )
+        subprocess.check_call( install_cmd, shell = True )
