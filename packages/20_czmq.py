@@ -9,7 +9,7 @@ class PackageDetails( package_helpers.PackageTemplate ):
     dirname = 'czmq'
 
     def source( self, source_dir ):
-        package_helpers.git_clone( source_dir, self.dirname, [ 'git://github.com/zeromq/czmq.git' ] )
+        package_helpers.git_clone( source_dir, self.dirname, [ 'git://github.com/zeromq/czmq2-x.git', 'czmq' ] )
 
     def compile( self, source_dir, build_dir, install_dir ):
         package_source_dir = os.path.join( source_dir, self.dirname )
