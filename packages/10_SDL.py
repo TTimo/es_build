@@ -22,6 +22,7 @@ class PackageDetails( package_helpers.PackageTemplate ):
             sh.cmake( '-G', 'Xcode', '-D', 'CMAKE_INSTALL_PREFIX=%s' % install_dir, package_source_dir, _out = sys.stdout )
             sh.xcodebuild( '-scheme', 'install', '-configuration', 'Release', _out = sys.stdout )
         else:
+            # FIXME: the prefix setting is ignored?
             sh.cmake( 'CMAKE_INSTALL_PREFIX=%s' % install_dir, package_source_dir, _out = sys.stdout )
             sh.make( '-j4', 'VERBOSE=1', _out = sys.stdout )
             sh.make.install( _out = sys.stdout )
